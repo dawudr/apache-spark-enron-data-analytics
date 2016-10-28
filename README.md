@@ -51,26 +51,35 @@ PROCESSING CURRENT EMAIL MESSAGE FILE:
 ***************************RESULTS***************************
 
 ************************TOP 100 EMAILS***********************
-(pete.davis@enron.com,1.5)
-(bert.meyers@enron.com,1.0)
-(john.anderson@enron.com,0.5)
-(Geir.Solberg@enron.com,0.5)
-(mark.guzman@enron.com,0.5)
-(michael.mier@enron.com,0.5)
-(Craig.Dean@enron.com,0.5)
+(pete.davis@enron.com,441.0)
+(bert.meyers@enron.com,440.5)
+(Geir.Solberg@enron.com,440.0)
+(mark.guzman@enron.com,440.0)
+(Craig.Dean@enron.com,440.0)
+(bill.williams.III@enron.com,439.5)
+(john.anderson@enron.com,439.0)
+(michael.mier@enron.com,439.0)
+(dporter3@enron.com,1.0)
+(Eric.Linder@enron.com,1.0)
+(monika.causholli@enron.com,1.0)
+(leaf.harasin@enron.com,1.0)
 
-Total Email Addresses count: 7
+Total Email Addresses count: 12
 
 **************AVERAGE WORD LENGTH IN ALL EMAILS**************
-Average word length: 4.688888888888889
+Average word length: 6.014763070271431
 
 *************************JOB SUMMARY*************************
-Date started: Fri Oct 28 16:03:47 BST 2016
-Date Ended: Fri Oct 28 16:03:49 BST 2016
-Total Number of Email Messages scanned: 1
-Total time taken: 1690ms
+Date started: Fri Oct 28 16:15:07 BST 2016
+Date Ended: Fri Oct 28 16:35:04 BST 2016
+Total Number of Email Messages scanned: 8231
+Total time taken: 1196926ms
 
 Stopping Apache Spark...
 ```
+4. Navigate to http://localhost:4040/jobs/ This load up the Apache Spark console with shows the status of all the data jobs running. Theres nothing that needs to be installed for this console, its bundled with the Java libraries and is only available while the programming is actively processing away.
+
+![Apache Spark Running Console](https://github.com/dawudr/apache-spark-enron-data-analytics/raw/master/Console_Apache_Spark_Jobs_at_locahost_port_4040.png "Viewing the Apache Spark Console on http://localhost:4040")
+
 
 
