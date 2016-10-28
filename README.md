@@ -77,6 +77,7 @@ Total time taken: 1196926ms
 
 Stopping Apache Spark...
 ```
+## Viewing the Apache Spark Console
 4. Navigate to http://localhost:4040/jobs/ This load up the Apache Spark console with shows the status of all the data jobs running. Theres nothing that needs to be installed for this console, its bundled with the Java libraries and is only available while the programming is actively processing away.
 
 ![Apache Spark Running Console](https://github.com/dawudr/apache-spark-enron-data-analytics/raw/master/Console_Apache_Spark_Jobs_at_locahost_port_4040.png "Viewing the Apache Spark Console on http://localhost:4040")
