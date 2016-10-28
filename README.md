@@ -52,7 +52,7 @@ done
 2. Run ```java -jar target\enron-spark-1.0-SNAPSHOT.jar /data/test ``` to run the program.
 3. You should see the following output for example:
 ```
-PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: /data/test/edrm-enron-v2_meyers/xml_version/text_000/3.438368.PK3OFMOYVKRD4XSYR1TCA4RA45VWBGM1B.txt
+PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: /data/test/edrm-enron-v2_meyers
 Setting up Apache Spark....
 
 **************NOW PROCESSING 8231 EMAIL MESSAGE FILES**************
@@ -60,6 +60,7 @@ Please sit back and wait........
 Setting up Java Thread Pools......
 PROCESSING CURRENT EMAIL MESSAGE FILE: 
 /data/test/edrm-enron-v2_meyers/xml_version/text_000/3.438368.PK3OFMOYVKRD4XSYR1TCA4RA45VWBGM1B.txt => Average word length: 4.688888888888889
+...
 
 ***************************RESULTS***************************
 
