@@ -6,6 +6,18 @@ Enron email data on AWS is big (210 GB), here I will be using Java and Apache Sp
 1. What is the average length, in words, of the emails? (Ignore attachments) 
 2. Which are the top 100 recipient email addresses? (An email sent to N recipients would could N times - count “cc” as 50%) 
 
+# Assumptions about the data
+* To Email addresses taken from the first occurence of "To: ". And all the email addresses are comma separated on one line only.
+* CC Email address taken from the first occurence of "CC: ". And all the email addresses are comma separated on one line only.
+* Email address must be a valid email which satisfies this regular expression: "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}),?" . All my regex validations done in my regex swiss army tool - in http://regex101.com
+* For To email addresses I score them with 1, CC email addresses are scored with 0.5 to rank the top 100 most popular email address. Incidently I notice a lot of emails from wifes/family members in Enron...did they actually do any office work, I'm thinking....One even planned a 3 day wedding schedule on a Golf course!!
+* Excluded the email headers when someone did a reply or forward from our word count.
+* Words must satisfy this regular expression ".?[a-zA-Z{-}?]+.?" . Words are alphabet characters including hypenated words. They do not include numbers.
+* Files ending with *.txt and *.eml are only considered and parsed.
+* I strip headers by stripping out the start of the file to the end of line of the first occurence of "X-ZLID:" string. I've noticed this holds true for most of the native text email samples I examined.
+
+
+
 # Getting started in 5 mins.
 
 ## Installation
