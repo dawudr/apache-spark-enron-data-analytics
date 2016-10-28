@@ -361,28 +361,6 @@ public class EnronEmailData {
         return new Double((double) totalLength / (double) count);
     }
 
-
-/*    public static void call_Executors(JavaRDD<String> rddInput) {
-        Date startDate = new Date();
-        // Call my Action Spark Jobs
-        System.out.println("\n***********************TOP 100 EMAILS***********************");
-        long startTimeEmail = System.currentTimeMillis();
-        EnronEmailData.action_GetTop100Emails(rddInput);
-        System.out.println("\nTime taken: " + (System.currentTimeMillis() - startTimeEmail) + "ms");
-
-        System.out.println("\n**************AVERAGE WORD LENGTH IN ALL EMAILS**************");
-        long startTimeMsg = System.currentTimeMillis();
-        EnronEmailData.action_wordLengthAverage(rddInput);
-        System.out.println("\nTime taken: " + (System.currentTimeMillis() - startTimeMsg) + "ms");
-
-        System.out.println("\n*******************TOTALS JOB SUMMARY***********************");
-        System.out.println("Date started: " + startDate);
-        System.out.println("Date Ended: " + new Date());
-        System.out.println("Number of Apache Spark parallel RDD partitions used: " + rddInput.count());
-        System.out.println("Total time taken: " + (System.currentTimeMillis() - startTimeEmail) + "ms");
-    }*/
-
-
     /**
      * EXECUTION STARTS HERE
      *
@@ -426,11 +404,6 @@ public class EnronEmailData {
             pool.shutdown();
             while (!pool.isTerminated()) {
             }
-            //waiting for all tasks
-//            for (Future<?> fut : futures) {
-//                fut.get();
-//            }
-
 
 
             System.out.println("\n***************************RESULTS***************************");
@@ -459,24 +432,6 @@ public class EnronEmailData {
 
             System.out.println("\nStopping Apache Spark...");
             sc.stop();
-
-
-
-
-            // Load the input data, which is a text file read from the command line
-/*            JavaPairRDD<String, String> inputDir = sc.wholeTextFiles(source_file_path);
-
-            // Convert Folder to JavaRDD of tuple<K,V> => map of tuple(filename,text)
-            JavaRDD<String> rddInput = inputDir.map(filenameTuple -> filenameTuple._2()).cache();
-            System.out.println("\n**Please sit back and wait. Loading Message Files...**\n");
-            inputDir.foreach(s ->
-                    System.out.println(s._1())
-            );
-
-            // Ready for the Job Call
-            System.out.println("\n*********NOW PROCESSING " + inputDir.count() + " EMAIL MESSAGE FILES!!*********");
-            EnronEmailData.call_Executors(rddInput);
-            System.out.println("Total Number of Email Messages scanned: " + inputDir.count());*/
 
         } else {
             System.out.println("Error no files found: " + source_file_path);
