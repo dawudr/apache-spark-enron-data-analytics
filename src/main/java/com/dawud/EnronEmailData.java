@@ -144,7 +144,7 @@ public class EnronEmailData {
 
             // Use Java Multithreading to submit these in parallel worker threads that run in each Spark clusters.
             System.out.println("Setting up Java Thread Pools......");
-            ExecutorService pool = Executors.newFixedThreadPool(50);
+            ExecutorService pool = Executors.newFixedThreadPool(10);
 
             List<Future<?>> futures = new ArrayList<>();
             for (final String f : listOfFiles) {
@@ -168,6 +168,8 @@ public class EnronEmailData {
 
                             Map<String, Double> map = EnronEmailData.action_GetTop100Emails(rddInput);
                             accumEmailAddrsCounter.add(map);
+
+                            rddInput.unpersist();
 
                             System.out.println("PROCESSING CURRENT EMAIL: " + filename
                                     + " => Average word length: " + averageWordLength
