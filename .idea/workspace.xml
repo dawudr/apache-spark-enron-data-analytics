@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ae7b5d7-82c4-4d67-b2e0-5abb34aea99b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/dawud/EnronEmailDataJob$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/dawud/EnronEmailDataJob.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/dawud/LongAccumulableParam.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/dawud/EnronEmailData$1.class" afterPath="$PROJECT_DIR$/target/classes/com/dawud/EnronEmailData$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/dawud/EnronEmailData.class" afterPath="$PROJECT_DIR$/target/classes/com/dawud/EnronEmailData.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/test-classes/com/dawud/EnronEmailDataTest.class" afterPath="$PROJECT_DIR$/target/test-classes/com/dawud/EnronEmailDataTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/dawud/EnronEmailData.java" afterPath="$PROJECT_DIR$/src/main/java/com/dawud/EnronEmailData.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/dawud/EnronEmailDataTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/dawud/EnronEmailDataTest.java" />
     </list>
     <ignored path="enron-spark.iws" />
@@ -38,10 +30,10 @@
       <file leaf-file-name="EnronEmailDataTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/dawud/EnronEmailDataTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="286" column="51" selection-start-line="286" selection-start-column="51" selection-end-line="286" selection-end-column="51" />
+            <state relative-caret-position="252">
+              <caret line="358" column="10" selection-start-line="358" selection-start-column="10" selection-end-line="358" selection-end-column="10" />
               <folding>
-                <element signature="e#15281#15297#0" expanded="true" />
+                <element signature="e#15306#15322#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,8 +54,8 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="27" column="3" selection-start-line="27" selection-start-column="3" selection-end-line="27" selection-end-column="3" />
+            <state relative-caret-position="585">
+              <caret line="40" column="3" selection-start-line="40" selection-start-column="3" selection-end-line="40" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -134,8 +126,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/dawud/MapCountAccumulator.java" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/main/java/com/dawud/EnronEmailData2.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/dawud/EnronEmailDataTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/dawud/EnronEmailData.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/dawud/EnronEmailDataTest.java" />
       </list>
     </option>
   </component>
@@ -816,7 +808,7 @@
       <workItem from="1476963726554" duration="6485000" />
       <workItem from="1477184297535" duration="100034000" />
       <workItem from="1477389044135" duration="204829000" />
-      <workItem from="1477838784564" duration="39705000" />
+      <workItem from="1477838784564" duration="40338000" />
     </task>
     <servers />
   </component>
@@ -853,11 +845,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="359842000" />
+    <option name="totallyTimeSpent" value="360475000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -872,7 +864,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15405117" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15405117" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32827735" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17590618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1161,8 +1153,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="27" column="3" selection-start-line="27" selection-start-column="3" selection-end-line="27" selection-end-column="3" />
+        <state relative-caret-position="585">
+          <caret line="40" column="3" selection-start-line="40" selection-start-column="3" selection-end-line="40" selection-end-column="3" />
           <folding />
         </state>
       </provider>
@@ -1187,10 +1179,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/dawud/EnronEmailDataTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="286" column="51" selection-start-line="286" selection-start-column="51" selection-end-line="286" selection-end-column="51" />
+        <state relative-caret-position="252">
+          <caret line="358" column="10" selection-start-line="358" selection-start-column="10" selection-end-line="358" selection-end-column="10" />
           <folding>
-            <element signature="e#15281#15297#0" expanded="true" />
+            <element signature="e#15306#15322#0" expanded="true" />
           </folding>
         </state>
       </provider>

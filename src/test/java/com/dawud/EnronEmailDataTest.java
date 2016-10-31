@@ -4,6 +4,7 @@ import com.holdenkarau.spark.testing.SharedJavaSparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import scala.Tuple2;
 
@@ -360,12 +361,14 @@ public class EnronEmailDataTest extends SharedJavaSparkContext implements Serial
 
 
     @Test
+    @Ignore
     public void testOpenReceivedMessageFolder() {
         String in = "C:\\Users\\dev\\Documents\\workspace\\data\\edrm-enron-v2\\pst_version";
         assertTrue("File list returned", EnronEmailData.openReceivedMessageFolder(in).size() >0);
     }
 
     @Test
+    @Ignore
     public void testGetFilteredFileList() {
         String in = "C:\\Users\\dev\\Documents\\workspace\\data\\edrm-enron-v2\\pst_version";
         List<String> output = EnronEmailData.getFilteredFileList(in);
