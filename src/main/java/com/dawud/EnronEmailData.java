@@ -149,7 +149,7 @@ public class EnronEmailData {
             List<Future<?>> futures = new ArrayList<>();
             for (final String f : listOfFiles) {
 
-                List<String> filenames = openReceivedMessageFolder(f);
+                List<String> filenames = getFilteredFileList(f);
                 System.out.println("PROCESSING CURRENT FOLDER: " + f + " => NUMBER OF MESSAGES FOUND: " + filenames.size());
                 accumMsgCounter.add(filenames.size());
 
@@ -233,7 +233,7 @@ public class EnronEmailData {
                 source_folder_path = Arrays.asList(args[0]);
             } else if (new File(args[0]).isDirectory()) {
                 // make it work for subfolders
-                source_folder_path = getFilteredFileList(args[0]);
+                source_folder_path = openTopLevelFolder(args[0]);
             } else {
                 System.err.println("Please enter folder path to Email Folders" +
                         "or Full filename for EML file or text file (*.eml or *.txt)>");
@@ -242,11 +242,7 @@ public class EnronEmailData {
 
 
         System.out.println("PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: " + args[0]);
-
-        List<String> list = source_folder_path.stream()
-                .map(s -> (s.substring(0, s.lastIndexOf(File.separator))))
-                .distinct().collect(Collectors.toList());
-        EnronEmailData enronEmailData = new EnronEmailData(list);
+        EnronEmailData enronEmailData = new EnronEmailData(source_folder_path);
 
     }
 
@@ -338,6 +334,30 @@ public class EnronEmailData {
                 .count();
         return count;
     }
+
+
+    /**
+     * Top level file list
+     *
+     * @param sourceDirectory
+     * @return
+     */
+    public static List<String> openTopLevelFolder(String sourceDirectory) {
+        File dir = new File(sourceDirectory);
+        List<String> listOfFilePaths = new ArrayList<>();
+
+        for (File f : dir.listFiles()) {
+            if (f.isFile()) {
+                if (f.getAbsolutePath().endsWith(".txt") || f.getAbsolutePath().endsWith(".eml")) {
+                    listOfFilePaths.add(f.getAbsolutePath());
+                }
+            } else {
+                listOfFilePaths.add(f.getAbsolutePath());
+            }
+        }
+        return listOfFilePaths;
+    }
+
 
     /**
      * Recursive file list generator
