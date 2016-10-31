@@ -1,8 +1,6 @@
 package com.dawud;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.spark.Accumulator;
-import org.apache.spark.AccumulatorParam;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -14,7 +12,6 @@ import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -247,7 +244,7 @@ public class EnronEmailData {
         System.out.println("PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: " + args[0]);
 
         List<String> list = source_folder_path.stream()
-                .map(s -> (s.substring(0, s.lastIndexOf("\\"))))
+                .map(s -> (s.substring(0, s.lastIndexOf(File.separator))))
                 .distinct().collect(Collectors.toList());
         EnronEmailData enronEmailData = new EnronEmailData(list);
 

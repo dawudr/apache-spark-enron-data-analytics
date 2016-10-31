@@ -1,12 +1,10 @@
 package com.dawud;
 
 import com.holdenkarau.spark.testing.SharedJavaSparkContext;
-import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import scala.Tuple2;
 
 import java.io.Serializable;
 import java.util.*;
