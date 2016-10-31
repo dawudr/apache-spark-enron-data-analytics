@@ -11,8 +11,21 @@ Enron email data on AWS is big (210 GB), here I will be using Java and Apache Sp
 ## Installation
 1. Create an EC2 instance with sufficient RAM 2-4GB should be enough. The more the faster the emails will be processed.
 2. Mount the EBS volume sized 210 GB with the snapshot ID snap-d203feb5 which contains Zip files of Enron email data.
-3. Install JAVA 8 - this is important because the code uses Java 8 Streams and Lamdba functionality which is NOT supported in older Java versions.
+3. Install JAVA 8 -
+```
+sudo yum install java-1.8.0
+sudo yum install java-1.8.0-openjdk-devel
+sudo /usr/sbin/alternatives --config java
+sudo /usr/sbin/alternatives --config javac
+```
+This is important because the code uses Java 8 Streams and Lamdba functionality which is NOT supported in older Java versions.
 4. Install MAVEN.
+```
+sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+sudo yum install -y apache-maven
+mvn –version
+```
 5. Checkout this project from Github.
 6. Run ```mvn clean install```   - this will compile and download all the Apache Spark, Hadoop, Test library dependencies defined in pom.xml.
 

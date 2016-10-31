@@ -2,6 +2,7 @@ package com.dawud;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.spark.Accumulator;
+import org.apache.spark.AccumulatorParam;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -13,6 +14,7 @@ import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -75,7 +77,7 @@ public class EnronEmailData {
     };
 
     // Filter Predicate => Regular expression to match email string plus optional comma
-    public static Function<String, Boolean> filterPredicateEmail = msg -> msg.toString().matches("([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5}),?");
+    public static Function<String, Boolean> filterPredicateEmail = msg -> msg.toString().matches("<?([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})>?,?");
 
     // Pair Function => Score 1 count for each To email addrs, Score 0.5 for each Cc email addrs
     public static PairFunction<String, String, Double> pairFunctionFullScore = email -> new Tuple2(email.replace(",", ""), 1.0);
@@ -115,7 +117,7 @@ public class EnronEmailData {
         System.out.println("Setting up Apache Spark....");
         // Setup Apache Spark
         conf = new SparkConf().setMaster("local").setAppName("Enron Email Data");
-        //.set("mapreduce.input.fileinputformat.input.dir.recursive", "true");
+//        .set("mapreduce.input.fileinputformat.input.dir.recursive", "true");
         // Create Spark Context from configuration
         sc = new JavaSparkContext(conf);
     }
@@ -124,6 +126,99 @@ public class EnronEmailData {
         EnronEmailData enronEmailData = new EnronEmailData();
         enronEmailData.setListOfFiles(sourceFilePath);
         enronEmailData.start_Job();
+    }
+
+    /**
+     * EXECUTION STARTS HERE
+     */
+    public void start_Job() throws ExecutionException, InterruptedException {
+        Date startDate = new Date();
+        long startTime = System.currentTimeMillis();
+
+        if (listOfFiles != null && listOfFiles.size() > 0) {
+            System.out.println("\n**************NOW PROCESSING EMAIL MESSAGE FILES**************");
+            System.out.println("Please sit back and wait........");
+
+            // spark driver variable to support parallel updating by associative and commutative operations
+            final Accumulator<Double> accumAvgWordLength = sc.doubleAccumulator(0.0, "Average Word Length");
+            final Accumulator<Integer> accumMsgCounter = sc.intAccumulator(0, "Message Counter");
+            final Accumulator<Map<String, Double>> accumEmailAddrsCounter = sc.accumulator(new HashMap<String, Double>(), "Email Address Score", new MapCountAccumulator());
+
+
+            // Use Java Multithreading to submit these in parallel worker threads that run in each Spark clusters.
+            System.out.println("Setting up Java Thread Pools......");
+            ExecutorService pool = Executors.newFixedThreadPool(50);
+
+            List<Future<?>> futures = new ArrayList<>();
+            for (final String f : listOfFiles) {
+
+                List<String> filenames = openReceivedMessageFolder(f);
+                System.out.println("PROCESSING CURRENT FOLDER: " + f + " => NUMBER OF MESSAGES FOUND: " + filenames.size());
+                accumMsgCounter.add(filenames.size());
+
+                for (String filename : filenames) {
+
+                    Future<?> fut = pool.submit(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            JavaRDD<String> rddInput = sc.textFile(filename);
+
+                            double averageWordLength = EnronEmailData.action_wordLengthAverage(rddInput);
+                            // Update Spark driver accumulator
+                            accumAvgWordLength.add(averageWordLength);
+
+                            Map<String, Double> map = EnronEmailData.action_GetTop100Emails(rddInput);
+                            accumEmailAddrsCounter.add(map);
+
+                            System.out.println("PROCESSING CURRENT EMAIL: " + filename
+                                    + " => Average word length: " + averageWordLength
+                                    + "\n Email score: " + map);
+                        }
+                    });
+                    futures.add(fut);
+
+                }
+            }
+
+
+            pool.shutdown();
+            while (!pool.isTerminated()) {
+            }
+
+
+            System.out.println("\n***************************RESULTS***************************");
+
+            System.out.println("\n************************TOP 100 EMAILS***********************");
+
+            accumEmailAddrsCounter.value()
+                    .entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+                    .limit(100)
+                    .forEach(s -> System.out.println(s));
+
+
+            System.out.println("\n**************AVERAGE WORD LENGTH IN ALL EMAILS**************");
+            System.out.println("Average word length: " + accumAvgWordLength.value() / new Double(accumMsgCounter.value()));
+
+
+
+            System.out.println("\n*************************JOB SUMMARY*************************");
+            System.out.println("Date started: " + startDate);
+            System.out.println("Date Ended: " + new Date());
+            System.out.println("Total Number of Email Messages scanned: " + accumMsgCounter.value());
+            System.out.println("Total time taken: " + (System.currentTimeMillis() - startTime) + "ms");
+
+
+            System.out.println("\nStopping Apache Spark...");
+            sc.stop();
+
+        } else {
+            System.out.println("Error no files found: " + source_file_path);
+        }
+
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -150,9 +245,13 @@ public class EnronEmailData {
 
 
         System.out.println("PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: " + args[0]);
-        EnronEmailData enronEmailData = new EnronEmailData(source_folder_path);
-    }
 
+        List<String> list = source_folder_path.stream()
+                .map(s -> (s.substring(0, s.lastIndexOf("\\"))))
+                .distinct().collect(Collectors.toList());
+        EnronEmailData enronEmailData = new EnronEmailData(list);
+
+    }
 
 
     /********************************
@@ -260,8 +359,12 @@ public class EnronEmailData {
 
                 for (File file : listOfFiles) {
                     if (file.isFile()) {
-                        String escapedFilePath = StringEscapeUtils.escapeJava(file.getAbsolutePath());
-                        listOfFilePaths.add(escapedFilePath);
+                        String filePath = file.getAbsolutePath();
+                        if(file.length() <= 100000) {
+                            if (filePath.endsWith(".txt") || filePath.endsWith(".eml")) {
+                                listOfFilePaths.add(filePath);
+                            }
+                        }
                     } else {
                         // recursive so we addAll lists together
                         listOfFilePaths.addAll(openReceivedMessageFolder(file.getPath()));
@@ -298,7 +401,7 @@ public class EnronEmailData {
      * @param rddInput
      * @return
      */
-    public static JavaPairRDD<String, Double> action_GetTop100Emails(JavaRDD<String> rddInput) {
+    public static Map<String, Double> action_GetTop100Emails(JavaRDD<String> rddInput) {
 
         /**
          * TOP 100 EMAILS
@@ -323,19 +426,22 @@ public class EnronEmailData {
 
         // Collect result from all processed Spark partitions
         // Sort descending and output the top 100 results
-        top100Emails.collect().stream()
+/*        top100Emails.collect().stream()
                 .sorted(tupleComparator.reversed())
                 .limit(100)
-                .forEach(s -> System.out.println(s));
+                .forEach(s -> System.out.println(s));*/
 
-        System.out.println("\nTotal Email Addresses count: " + top100Emails.count());
+//        System.out.println("\nTotal Email Addresses count: " + top100Emails.count());
 
-        return top100Emails;
+
+        Map<String, Double> map = top100Emails.collectAsMap();
+        return map;
     }
 
     /**
      * ACTION - AVERAGE WORD LENGTH IN ALL EMAILS
      * Returns Word count and Total of Word lengths back to the accumulator
+     *
      * @param rddInput
      */
     public static double action_wordLengthAverage(JavaRDD<String> rddInput) {
@@ -359,83 +465,5 @@ public class EnronEmailData {
         long count = rddInput.flatMap(EnronEmailData.flatMapFunctionMsgBody).count();
         // Average word length
         return new Double((double) totalLength / (double) count);
-    }
-
-    /**
-     * EXECUTION STARTS HERE
-     *
-     */
-    public void start_Job() throws ExecutionException, InterruptedException {
-        Date startDate = new Date();
-        long startTime = System.currentTimeMillis();
-
-        if (listOfFiles != null && listOfFiles.size() > 0) {
-            System.out.println("\n**************NOW PROCESSING " + listOfFiles.size() + " EMAIL MESSAGE FILES**************");
-            System.out.println("Please sit back and wait........");
-
-            // spark driver variable to support parallel updating by associative and commutative operations
-            final Accumulator<Double> accumAvgWordLength = sc.doubleAccumulator(0.0, "Average Word Length");
-
-            // Use Java Multithreading to submit these in parallel worker threads that run in each Spark clusters.
-            System.out.println("Setting up Java Thread Pools......");
-            ExecutorService pool = Executors.newFixedThreadPool(10);
-
-            List<Future<?>> futures = new ArrayList<>();
-            for(final String f : listOfFiles) {
-                Future<?> fut = pool.submit(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        JavaRDD<String> rddInput = sc.textFile(f);
-
-                        double averageWordLength = EnronEmailData.action_wordLengthAverage(rddInput);
-                        // Update Spark driver accumulator
-                        accumAvgWordLength.add(averageWordLength);
-                        System.out.println("PROCESSING CURRENT EMAIL MESSAGE FILE: \n" + f + " => Average word length: " + averageWordLength);
-
-//                        System.out.println("\nTop 100 Emails Address in this email.......");
-//                        top100Emails = EnronEmailData.action_GetTop100Emails(rddInput).coalesce(1);
-                    }
-                });
-                futures.add(fut);
-            }
-
-            pool.shutdown();
-            while (!pool.isTerminated()) {
-            }
-
-
-            System.out.println("\n***************************RESULTS***************************");
-
-            System.out.println("\n************************TOP 100 EMAILS***********************");
-
-            // Load the input data, which is a text file read from the command line
-            JavaPairRDD<String, String> inputDir = sc.wholeTextFiles(String.join(",", listOfFiles));
-            // Convert Folder to JavaRDD of tuple<K,V> => map of tuple(filename,text)
-
-            JavaRDD<String> rddInput = inputDir.map(filenameTuple -> filenameTuple._2());
-
-            EnronEmailData.action_GetTop100Emails(rddInput);
-
-
-            System.out.println("\n**************AVERAGE WORD LENGTH IN ALL EMAILS**************");
-            System.out.println("Average word length: " + accumAvgWordLength.value() / new Double(listOfFiles.size()));
-
-
-            System.out.println("\n*************************JOB SUMMARY*************************");
-            System.out.println("Date started: " + startDate);
-            System.out.println("Date Ended: " + new Date());
-            System.out.println("Total Number of Email Messages scanned: " + listOfFiles.size());
-            System.out.println("Total time taken: " + (System.currentTimeMillis() - startTime) + "ms");
-
-
-            System.out.println("\nStopping Apache Spark...");
-            sc.stop();
-
-        } else {
-            System.out.println("Error no files found: " + source_file_path);
-        }
-
     }
 }

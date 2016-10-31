@@ -8,9 +8,7 @@ import org.junit.Test;
 import scala.Tuple2;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -286,22 +284,22 @@ public class EnronEmailDataTest extends SharedJavaSparkContext implements Serial
                 "(bert.meyers@enron.com,0.5)\n" +
                 "(Craig.Dean@enron.com,0.5)";
 
-        final List<Tuple2<String, Double>> expectedList = new ArrayList<Tuple2<String, Double>>();
-        expectedList.add(new Tuple2<String, Double>("pete.davis@enron.com", 1.5));
-        expectedList.add(new Tuple2<String, Double>("bert.meyers@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("mark.guzman@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("michael.mier@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("john.anderson@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("Geir.Solberg@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("bill.williams.III@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("ryan.slinger@enron.com", 0.5));
-        expectedList.add(new Tuple2<String, Double>("Craig.Dean@enron.com", 0.5));
+        final Map<String, Double> expectedList = new HashMap<String, Double>();
+        expectedList.put("pete.davis@enron.com", 1.5);
+        expectedList.put("bert.meyers@enron.com", 0.5);
+        expectedList.put("mark.guzman@enron.com", 0.5);
+        expectedList.put("michael.mier@enron.com", 0.5);
+        expectedList.put("john.anderson@enron.com", 0.5);
+        expectedList.put("Geir.Solberg@enron.com", 0.5);
+        expectedList.put("bill.williams.III@enron.com", 0.5);
+        expectedList.put("ryan.slinger@enron.com", 0.5);
+        expectedList.put("Craig.Dean@enron.com", 0.5);
 
 
         List<String> input = Arrays.asList(in);
         JavaRDD<String> rddInput = jsc().parallelize(input);
 
-        JavaPairRDD<String, Double> actual = EnronEmailData.action_GetTop100Emails(rddInput).sortByKey();
+        Map<String, Double> actual = EnronEmailData.action_GetTop100Emails(rddInput);
         assertTrue(expectedList.size() >0);
 
         /*        actual.foreach( s ->
