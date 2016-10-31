@@ -3,8 +3,21 @@ Analysis of 200GB of Enron email Data on AWS using Apache Spark and JAVA
 
 # The Problem 
 Enron email data on AWS is big (210 GB), here I will be using Java and Apache Spark and native text/XML version of the email data files to answer the following questions: 
+
 1. What is the average length, in words, of the emails? (Ignore attachments) 
 2. Which are the top 100 recipient email addresses? (An email sent to N recipients would could N times - count “cc” as 50%) 
+
+# Assumptions about the data
+* To Email addresses taken from the first occurence of "To: ". And all the email addresses are comma separated on one line only.
+* CC Email address taken from the first occurence of "CC: ". And all the email addresses are comma separated on one line only.
+* Email address must be a valid email which satisfies this regular expression: ```([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}),?``` . All my regex validations done in my regex swiss army tool - in http://regex101.com
+* For To email addresses I score them with 1, CC email addresses are scored with 0.5 to rank the top 100 most popular email address. Incidently I notice a lot of emails from wifes/family members in Enron...did they actually do any office work, I'm thinking....One even planned a 3 day wedding schedule on a Golf course!!
+* Excluded the email headers when someone did a reply or forward from our word count.
+* Words must satisfy this regular expression ```.?[a-zA-Z{-}?]+.?``` . Words are alphabet characters including hypenated words. They do not include numbers.
+* Files ending with *.txt and *.eml are only considered and parsed.
+* I strip headers by stripping out the start of the file to the end of line of the first occurence of ````X-ZLID:```` string. I've noticed this holds true for most of the native text email samples I examined.
+
+
 
 # Getting started in 5 mins.
 
@@ -52,38 +65,49 @@ done
 2. Run ```java -jar target\enron-spark-1.0-SNAPSHOT.jar /data/test ``` to run the program.
 3. You should see the following output for example:
 ```
-PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: /data/test/edrm-enron-v2_meyers/xml_version/text_000/3.438368.PK3OFMOYVKRD4XSYR1TCA4RA45VWBGM1B.txt
+PROCESSING EMAIL MESSAGE FILE(S)/FOLDER: /data/test/edrm-enron-v2_meyers
 Setting up Apache Spark....
 
-**************NOW PROCESSING 1 EMAIL MESSAGE FILES**************
+**************NOW PROCESSING 8231 EMAIL MESSAGE FILES**************
 Please sit back and wait........
 Setting up Java Thread Pools......
 PROCESSING CURRENT EMAIL MESSAGE FILE: 
 /data/test/edrm-enron-v2_meyers/xml_version/text_000/3.438368.PK3OFMOYVKRD4XSYR1TCA4RA45VWBGM1B.txt => Average word length: 4.688888888888889
+...
 
 ***************************RESULTS***************************
 
 ************************TOP 100 EMAILS***********************
-(pete.davis@enron.com,1.5)
-(bert.meyers@enron.com,1.0)
-(john.anderson@enron.com,0.5)
-(Geir.Solberg@enron.com,0.5)
-(mark.guzman@enron.com,0.5)
-(michael.mier@enron.com,0.5)
-(Craig.Dean@enron.com,0.5)
+(pete.davis@enron.com,441.0)
+(bert.meyers@enron.com,440.5)
+(Geir.Solberg@enron.com,440.0)
+(mark.guzman@enron.com,440.0)
+(Craig.Dean@enron.com,440.0)
+(bill.williams.III@enron.com,439.5)
+(john.anderson@enron.com,439.0)
+(michael.mier@enron.com,439.0)
+(dporter3@enron.com,1.0)
+(Eric.Linder@enron.com,1.0)
+(monika.causholli@enron.com,1.0)
+(leaf.harasin@enron.com,1.0)
 
-Total Email Addresses count: 7
+Total Email Addresses count: 12
 
 **************AVERAGE WORD LENGTH IN ALL EMAILS**************
-Average word length: 4.688888888888889
+Average word length: 6.014763070271431
 
 *************************JOB SUMMARY*************************
-Date started: Fri Oct 28 16:03:47 BST 2016
-Date Ended: Fri Oct 28 16:03:49 BST 2016
-Total Number of Email Messages scanned: 1
-Total time taken: 1690ms
+Date started: Fri Oct 28 16:15:07 BST 2016
+Date Ended: Fri Oct 28 16:35:04 BST 2016
+Total Number of Email Messages scanned: 8231
+Total time taken: 1196926ms
 
 Stopping Apache Spark...
 ```
+## Viewing the Apache Spark Console
+4. Navigate to http://localhost:4040/jobs/ This load up the Apache Spark console with shows the status of all the data jobs running. Theres nothing that needs to be installed for this console, its bundled with the Java libraries and is only available while the programming is actively processing away.
+
+![Apache Spark Running Console](https://github.com/dawudr/apache-spark-enron-data-analytics/raw/master/Console_Apache_Spark_Jobs_at_locahost_port_4040.png "Viewing the Apache Spark Console on http://localhost:4040")
+
 
 
